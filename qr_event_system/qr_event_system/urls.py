@@ -1,5 +1,5 @@
 """
-URL configuration for backend project.
+URL configuration for qr_event_system project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/5.1/topics/http/urls/
