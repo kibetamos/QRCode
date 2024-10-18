@@ -1,13 +1,11 @@
 from datetime import timezone
 from django.db import models
-
-# Create your models here.
 from django.contrib.auth.models import User
 import uuid
 import qrcode
 from django.core.files.base import ContentFile
 from io import BytesIO
-
+from django.core.files import File
 
 class Event(models.Model):
         
@@ -23,61 +21,63 @@ class Event(models.Model):
                 return self.name
         
 
-class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
-    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='orders')
-    quantity = models.PositiveIntegerField()
-    remaining_quantity = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('PAID', 'Paid')], default='PENDING')
-    payment_reference = models.CharField(max_length=255, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"{self.user.username} - {self.event.name} - {self.status}"
-    
 class QRCode(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='qrcodes')
-    qr_code_data = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-    qr_code_image = models.ImageField(upload_to='qrcodes/')
-    created_at = models.DateTimeField(auto_now_add=True)
+    qr_code_data = models.CharField(max_length=255, unique=True)
     verified = models.BooleanField(default=False)
-    verified_at = models.DateTimeField(null=True, blank=True)
-
-    def __str__(self):
-        return f"QR Code for {self.order.event.name} - {self.qr_code_data}"
+    order = models.ForeignKey('Order', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def mark_as_used(self):
         if not self.verified:
             self.verified = True
-            self.verified_at = timezone.now()
-            self.order.remaining_quantity = max(0, self.order.remaining_quantity - 1)
-            self.order.save()
             self.save()
-
-    
-
-
-def save(self, *args, **kwargs):
-    if not self.pk:  # When creating a new order
-        self.remaining_quantity = self.quantity
-    super(Order, self).save(*args, **kwargs)
+            # Decrement the remaining quantity of the order if applicable
+            if self.order.remaining_quantity > 0:
+                self.order.remaining_quantity -= 1
+                self.order.save()
 
 
+class Order(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    event = models.ForeignKey('Event', on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    remaining_quantity = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed')])
 
+    def save(self, *args, **kwargs):
+        # On saving the order, generate the required number of QR codes.
+        if not self.pk:  # Only generate on the first save (creation)
+            self.remaining_quantity = self.quantity
+            super().save(*args, **kwargs)
+            self.generate_qr_codes()
+        else:
+            super().save(*args, **kwargs)
 
-def generate_qr_code(qr_code_data):
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_H,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(qr_code_data)
-    qr.make(fit=True)
+    def generate_qr_codes(self):
+        for i in range(self.quantity):
+            qr_code_data = f"{self.event.id}-{self.user.id}-{self.id}-{i}"
+            qr_image = self.create_qr_image(qr_code_data)
 
-    img = qr.make_image(fill_color="black", back_color="white")
-    buffer = BytesIO()
-    img.save(buffer, format="PNG")
-    return ContentFile(buffer.getvalue())
+            qr_code = QRCode.objects.create(
+                qr_code_data=qr_code_data,
+                order=self,
+                image=qr_image
+            )
 
+    def create_qr_image(self, data):
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(data)
+        qr.make(fit=True)
 
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        file_name = f"qr_{self.id}_{data}.png"
+        return File(buffer, name=file_name)
