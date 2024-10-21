@@ -16,6 +16,11 @@ class Event(models.Model):
         venue = models.CharField(max_length=255)
         event_slug = models.SlugField(max_length=255, unique=True)
         created_at = models.DateTimeField(auto_now_add=True)
+        image = models.ImageField(upload_to='event_images/', blank=True, null=True)
+
+        template_type = models.CharField(max_length=100, default='default')  # Can be 'default', 'premium', etc.
+        enable_phone_check = models.BooleanField(default=False)  # For phase 4
+
 
         def __str__(self):
                 return self.name
@@ -26,7 +31,13 @@ class QRCode(models.Model):
     verified = models.BooleanField(default=False)
     order = models.ForeignKey('Order', on_delete=models.CASCADE)
     image = models.ImageField(upload_to='qr_codes/', blank=True, null=True)
+
+
+    attendee_name = models.CharField(max_length=255, blank=True, null=True)  # Optional attendee name
+    phone_number = models.CharField(max_length=15, blank=True, null=True)  # Optional phone number for verification
+    # created_at = models.DateTimeField(auto_now_add=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
 
     def mark_as_used(self):
         if not self.verified:
