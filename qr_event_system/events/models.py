@@ -39,15 +39,16 @@ class QRCode(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
+
     def mark_as_used(self):
         if not self.verified:
             self.verified = True
             self.save()
-            # Decrement the remaining quantity of the order if applicable
-            if self.order.remaining_quantity > 0:
-                self.order.remaining_quantity -= 1
-                self.order.save()
-
+            # Decrement the remaining quantity of the order
+            self.order.remaining_quantity -= 1
+            self.order.save()
+            # Check if all QR codes have been used, and mark the order as COMPLETED if so
+            self.order.check_status()
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -55,7 +56,13 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField()
     remaining_quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed')])
+    # status = models.CharField(max_length=20, choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed')])
+    status = models.CharField(
+        max_length=20, 
+        choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed')],
+        default='PENDING'  
+    )
+
 
     def save(self, *args, **kwargs):
         # On saving the order, generate the required number of QR codes.
@@ -65,6 +72,12 @@ class Order(models.Model):
             self.generate_qr_codes()
         else:
             super().save(*args, **kwargs)
+
+    def check_status(self):
+        # Automatically mark the order as COMPLETED if all QR codes have been used
+        if self.remaining_quantity == 0:
+            self.status = 'COMPLETED'
+            self.save()
 
     def generate_qr_codes(self):
         for i in range(self.quantity):
