@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
 import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator";
+// import Header from "../pages/Header";
 
 export default function Form({ route, method }) {
     const [username, setUsername] = useState("");
@@ -35,7 +36,9 @@ export default function Form({ route, method }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="form-container">
+        <div>
+            {/* <Header /> */}
+            <form onSubmit={handleSubmit} class="custom-form contact-form">
             <h1>{name}</h1>
             <input
                 className="form-input"
@@ -56,5 +59,7 @@ export default function Form({ route, method }) {
                 {name}
             </button>
         </form>
+
+        </div>
     );
 }

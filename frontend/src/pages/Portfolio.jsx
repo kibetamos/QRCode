@@ -3,71 +3,65 @@ import React from 'react'
 export default function Portfolio() {
   return (
     <div>
- <div id="portfolio" class="our-portfolio section">
+<section class="timeline-section section-padding" id="section_3">
+    <div class="section-overlay"></div>
+
     <div class="container">
-      <div class="row">
-        <div class="col-lg-6 offset-lg-3">
-          <div class="section-heading  wow bounceIn" data-wow-duration="1s" data-wow-delay="0.2s">
-            <h2>How <em> it</em> Works <span></span></h2>
-          </div>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-lg-3 col-sm-6">
-          <a href="#">
-            <div class="item wow bounceInUp" data-wow-duration="1s" data-wow-delay="0.3s">
-              <div class="hidden-content">
-                <h4>1.</h4>
-                <p>Create a Cause  Sign up and add a title, description, and media.</p>
-              </div>
-              <div class="showed-content">
-                <img src="assets/images/portfolio-image.png" alt=""/>
-              </div>
+        <div class="row">
+
+            <div class="col-12 text-center">
+                <h2 class="text-white mb-4">How does it work?</h2>
             </div>
-          </a>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <a href="#">
-            <div class="item wow bounceInUp" data-wow-duration="1s" data-wow-delay="0.4s">
-              <div class="hidden-content">
-                <h4>2.</h4>
-                <p>Generate a QR Code Attach the QR code to your cause</p>
-              </div>
-              <div class="showed-content">
-                <img src="assets/images/portfolio-image.png" alt=""/>
-              </div>
+
+            <div class="col-lg-10 col-12 mx-auto">
+                <div class="timeline-container">
+                    <ul class="vertical-scrollable-timeline" id="vertical-scrollable-timeline">
+                        <div class="list-progress">
+                            <div class="inner"></div>
+                        </div>
+
+                        <li>
+                            <h4 class="text-white mb-3">Search</h4>
+
+                            <p class="text-white">Search for an event you are instrested</p>
+
+                            <div class="icon-holder">
+                              <i class="bi-search"></i>
+                            </div>
+                        </li>
+                        
+                        <li>
+                            <h4 class="text-white mb-3">Scan</h4>
+
+                            <p class="text-white">Choose the event and scan qr as a person to attend</p>
+
+                            <div class="icon-holder">
+                              <i class="bi-bookmark"></i>
+                            </div>
+                        </li>
+
+                        <li>
+                            <h4 class="text-white mb-3">Prepare &amp; Enjoy</h4>
+
+                            <p class="text-white">Hurray You are atending the event, Dont miss it.</p>
+
+                            <div class="icon-holder">
+                              <i class="bi-book"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
-          </a>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-          <a href="#">
-            <div class="item wow bounceInUp" data-wow-duration="1s" data-wow-delay="0.5s">
-              <div class="hidden-content">
-                <h4>3.</h4>
-                <p>Share & Engage Distribute your QR code and track engagement..</p>
-              </div>
-              <div class="showed-content">
-                <img src="assets/images/portfolio-image.png" alt=""/>
-              </div>
+
+            <div class="col-12 text-center mt-5">
+                <p class="text-white">
+                    Want to learn more?
+                    <a href="#" class="btn custom-btn custom-border-btn ms-3">Check out Here</a>
+                </p>
             </div>
-          </a>
         </div>
-        <div class="col-lg-3 col-sm-6">
-          <a href="#">
-            <div class="item wow bounceInUp" data-wow-duration="1s" data-wow-delay="0.6s">
-              <div class="hidden-content">
-                <h4>4 .</h4>
-                {/* <p>Lorem ipsum dolor sit ameti ctetur aoi adipiscing eto.</p> */}
-              </div>
-              <div class="showed-content">
-                <img src="assets/images/portfolio-image.png" alt=""/>
-              </div>
-            </div>
-          </a>
-        </div>
-      </div>
     </div>
-  </div>
+</section>
         
     </div>
   )
