@@ -5,7 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
-
+import Event_details from "./pages/Event_details"
 function Logout() {
   localStorage.clear()
   return <Navigate to="/login" />
@@ -32,7 +32,8 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="*" element={<NotFound />}></Route>
-      </Routes>
+        <Route path="/api/orders/:id/" element={<Event_details />} />
+              </Routes>
     </BrowserRouter>
   )
 }

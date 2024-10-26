@@ -5,12 +5,11 @@ import ContactUs from './ContactUs'
 import Portfolio from './Portfolio'
 import { Link } from 'react-router-dom';
 import { useState,useEffect } from 'react'
-
 import api from '../api'
 // import Header from './Header';
 export default function Home() {
 
-  const [orders, setOrders] = useState([])
+  const [events, setEvents] = useState([])
 
   useEffect(() => {
     getEvents();
@@ -19,10 +18,10 @@ export default function Home() {
 
   const getEvents = () => {
     api
-        .get("/api/orders/")
+        .get("/api/events/orders/")
         .then((res) => res.data)
         .then((data) => {
-            setOrders(data);
+            setEvents(data);
             console.log(data);
         })
         .catch((err) => alert(err));
@@ -256,28 +255,22 @@ export default function Home() {
                                     </a>
                                 </div>
                             </div>
-                            {orders.map((order, index) => (
+                            {events.map((event, index) => (
                             <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
                                 <div class="custom-block bg-white shadow-lg">
-                                    {/* <a href="topics-detail.html"> */}
-                                    {/* <Link to={`/events/${event.id}/details`}> */}
-                                    <Link to={`api/orders/${order.id}/`}>
-                                       
-                                    
-                                    <div class="d-flex">
+                                    <a href="topics-detail.html">
+                                        <div class="d-flex">
                                             <div>
-                                            {/* {order.id} */}
-                                                <h5 class="mb-2">{order.event}</h5>
+                                                <h5 class="mb-2">{event.name}</h5>
 
-                                                    <p class="mb-0">Wedding of X and Y happening on {order.status}.</p>
+                                                    <p class="mb-0">Wedding of X and Y happening on {event.date}.</p>
                                             </div>
 
-                                            <span class="badge bg-design rounded-pill ms-auto">{order.remaining_quantity}</span>
+                                            <span class="badge bg-design rounded-pill ms-auto">75</span>
                                         </div>
-                                        {/* {event.id} */}
+
                                         <img src="./assets/images/topics/undraw_Redesign_feedback_re_jvm0.png" class="custom-block-image img-fluid" alt=""/>
-                                    {/* </a> */}
-                                    </Link>
+                                    </a>
                                 </div>
                             </div>
  ))}

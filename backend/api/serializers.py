@@ -18,7 +18,7 @@ class UserSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['organizer', 'name', 'description', 'date', 'venue', 'event_slug', 'created_at', 'template_type', 'enable_phone_check', 'image']
+        fields = ['id','organizer', 'name', 'description', 'date', 'venue', 'event_slug', 'created_at', 'template_type', 'enable_phone_check', 'image']
 
 
 class OrderSerializer(serializers.ModelSerializer):
