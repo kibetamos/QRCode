@@ -267,9 +267,9 @@ export default function Home() {
                                     <div class="d-flex">
                                             <div>
                                             {/* {order.id} */}
-                                                <h5 class="mb-2">{order.event}</h5>
+                                                <h5 class="mb-2">{order.event_name}</h5>
 
-                                                    <p class="mb-0">Wedding of X and Y happening on {order.status}.</p>
+                                                    <p class="mb-0">{order.event_name} on {order.created_at}</p>
                                             </div>
 
                                             <span class="badge bg-design rounded-pill ms-auto">{order.remaining_quantity}</span>
@@ -280,7 +280,7 @@ export default function Home() {
                                     </Link>
                                 </div>
                             </div>
- ))}
+                                    ))}
                             {/* <div class="col-lg-4 col-md-6 col-12">
                                 <div class="custom-block bg-white shadow-lg">
                                     <a href="topics-detail.html">

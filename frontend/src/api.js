@@ -1,47 +1,47 @@
-// import axios from "axios";
-
-// import { ACCESS_TOKEN } from "./constants";
-
-// const api = axios.create({
-//     baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000", // Ensure protocol is included
-// });
-
-// api.interceptors.request.use(
-//     (config) => {
-//         const token = localStorage.getItem(ACCESS_TOKEN);
-//         if (token) {
-//             config.headers.Authorization = `Bearer ${token}`;
-//         }
-//         return config;
-//     },
-//     (error) => {
-//         return Promise.reject(error);
-//     }
-// );
-
-// export default api;
-
 import axios from "axios";
+
 import { ACCESS_TOKEN } from "./constants";
 
-const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
-
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || apiUrl,
-
+    baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000", // Ensure protocol is included
 });
 
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem(ACCESS_TOKEN);
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    (config) => {
+        const token = localStorage.getItem(ACCESS_TOKEN);
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
     }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
 );
 
 export default api;
+
+// import axios from "axios";
+// import { ACCESS_TOKEN } from "./constants";
+
+// const apiUrl = "/choreo-apis/awbo/backend/rest-api-be2/v1.0";
+
+// const api = axios.create({
+//     baseURL: process.env.REACT_APP_API_URL || apiUrl,
+
+// });
+
+// api.interceptors.request.use(
+//   (config) => {
+//     const token = localStorage.getItem(ACCESS_TOKEN);
+//     if (token) {
+//       config.headers.Authorization = `Bearer ${token}`;
+//     }
+//     return config;
+//   },
+//   (error) => {
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;

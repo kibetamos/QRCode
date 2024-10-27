@@ -16,7 +16,7 @@ export default function EventDetails() {
         const response = await api.get(`api/orders/${id}/`);
         const data = response.data;
         setOrderData(data);
-        console.log(data); // This will log the data to the console for debugging
+        console.log(data); // This will loz1g the data to the console for debugging
         setLoading(false);
       } catch (err) {
         setError('Failed to fetch event details. Please try again later.');
@@ -36,12 +36,12 @@ export default function EventDetails() {
       {orderData && (
         <div>
           <p><strong>Order ID:</strong> {orderData.id}</p>
-          {/* <p><strong>Tickets remaining:</strong> {orderData.quantity}</p> */}
-          <p><strong>Remaining Tickets:</strong> {orderData.remaining_quantity}</p>
+          <p><strong>Tickets Remaining:</strong> {orderData.remaining_quantity}</p>
           <p><strong>Created At:</strong> {new Date(orderData.created_at).toLocaleString()}</p>
           <p><strong>Status:</strong> {orderData.status}</p>
-          <p><strong>User:</strong> {orderData.user}</p>
-          <p><strong>Event:</strong> {orderData.event.name}</p>        </div>
+          <p><strong>User:</strong> {orderData.user_name}</p>
+          <p><strong>Event:</strong> {orderData.event_name}</p>
+        </div>
       )}
     </div>
   );

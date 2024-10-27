@@ -22,10 +22,12 @@ class EventSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    user_name = serializers.CharField(source='user.username', read_only=True)
+    event_name = serializers.CharField(source='event.name', read_only=True)  # Change 'event.name' based on your Event model
+
     class Meta:
         model = Order
         fields = '__all__'
-
 
 
 class QRCodeSerializer(serializers.ModelSerializer):
