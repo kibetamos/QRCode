@@ -2,6 +2,7 @@ from io import BytesIO
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.files import File
+from .utils import create_qr_image
 import qrcode
 
 # Utility function to create a QR code image
@@ -47,7 +48,18 @@ class Order(models.Model):
         max_length=20, 
         choices=[('PENDING', 'Pending'), ('COMPLETED', 'Completed')],
         default='PENDING'
+
     )
+
+    def generate_qr_codes(self):
+        for i in range(self.quantity):
+            qr_code_data = f"{self.event.id}-{self.user.id}-{self.id}-{i}"
+            qr_image = create_qr_image(qr_code_data)  # Use the utility function here
+            QRCode.objects.create(
+                qr_code_data=qr_code_data,
+                order=self,
+                image=qr_image
+                )
 
     def save(self, *args, **kwargs):
         if self.pk:  # Updating existing order
@@ -56,7 +68,13 @@ class Order(models.Model):
                 raise ValueError("Remaining quantity cannot exceed the total quantity.")
         else:  # Creating new order
             self.remaining_quantity = self.quantity
+            # Generate QR codes when a new order is created
+            super().save(*args, **kwargs)  # First save the order
+            self.generate_qr_codes()  # Then generate QR codes
+            return
+
         super().save(*args, **kwargs)
+
 
     def check_status(self):
         # Automatically mark the order as COMPLETED if all QR codes have been used

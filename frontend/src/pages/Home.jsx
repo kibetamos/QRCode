@@ -32,10 +32,10 @@ export default function Home() {
    <main>
    <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                  
-                    <a class="navbar-brand" href="index.html">
-                        <i class="bi-back"></i>
-                        <span>AnyQRC</span>
+                
+                    <a className="navbar-brand" href="/">
+                    <i class="bi-back"></i>
+                    <span>AnyQRC</span>
                     </a>
 
                     <div class="d-lg-none ms-auto me-4">
@@ -47,6 +47,10 @@ export default function Home() {
                     </button>
     
                     <div class="collapse navbar-collapse" id="navbarNav">
+
+                    
+
+
                         <ul class="navbar-nav ms-lg-5 me-lg-auto">
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="#section_1">Home</a>
@@ -59,13 +63,10 @@ export default function Home() {
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="#section_3">ScanQRCode</a>
                             </li>
-{/* <!-- 
-                            <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_4">FAQs</a>
-                            </li> --> */}
+
     
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_5">Contact</a>
+                            <a className="nav-link" href="/event">Create Order</a>
                             </li>
 
                             <li class="nav-item dropdown">
@@ -74,7 +75,6 @@ export default function Home() {
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
                                     <li><a class="dropdown-item" href="topics-listing.html">REGISTER</a></li>
 
-                                    {/* <li><a class="dropdown-item" href="login.html">LOGIN</a></li> */}
                                     <li>
                                       <Link className="dropdown-item" to="/login">LOGIN</Link>
                                     </li>
@@ -140,7 +140,7 @@ export default function Home() {
                                 <p class="mb-0">We work around the clock to ensure you get the best.</p>
                             </div>
 
-                            <span class="badge bg-design rounded-pill ms-auto">14</span>
+                            {/* <span class="badge bg-design rounded-pill ms-auto">14</span> */}
                         </div>
 
                         <img src="./assets/images/topics/undraw_Remote_design_team_re_urdx.png" class="custom-block-image img-fluid" alt=""/>
@@ -155,14 +155,14 @@ export default function Home() {
 
                         <div class="custom-block-overlay-text d-flex">
                             <div>
-                                <h5 class="text-white mb-2">Finance</h5>
+                                <h5 class="text-white mb-2">AnyQRC</h5>
 
-                                <p class="text-white">Topic Listing Template includes homepage, listing page, detail page, and contact page. You can feel free to edit and adapt for your CMS requirements.</p>
+                                <p class="text-white">Easily create, share, and showcase your causes or ideas with a simple scan. With Anyqrc, you can generate QR codes that link directly to detailed information, images, and stories about your cause or project, enabling seamless sharing and engagement for anyone, anywhere.</p>
 
                                 <a href="topics-detail.html" class="btn custom-btn mt-2 mt-lg-3">Learn More</a>
                             </div>
 
-                            <span class="badge bg-finance rounded-pill ms-auto">25</span>
+                            {/* <span class="badge bg-finance rounded-pill ms-auto">25</span> */}
                         </div>
 
                         <div class="social-share d-flex">
@@ -209,25 +209,10 @@ export default function Home() {
     <div class="container-fluid">
         <div class="row">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
-                {/* <!-- <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="design-tab" data-bs-toggle="tab" data-bs-target="#design-tab-pane" type="button" role="tab" aria-controls="design-tab-pane" aria-selected="true">Design</button>
-                </li> -->
-
-                <!-- <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="marketing-tab" data-bs-toggle="tab" data-bs-target="#marketing-tab-pane" type="button" role="tab" aria-controls="marketing-tab-pane" aria-selected="false">Marketing</button>
-                </li> --> */}
 
                 <li class="nav-item" role="presentation">
                     <button class="nav-link" id="finance-tab" data-bs-toggle="tab" data-bs-target="#finance-tab-pane" type="button" role="tab" aria-controls="finance-tab-pane" aria-selected="false">Activities</button>
                 </li>
-
-                {/* <!-- <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="music-tab" data-bs-toggle="tab" data-bs-target="#music-tab-pane" type="button" role="tab" aria-controls="music-tab-pane" aria-selected="false">Music</button>
-                </li> -->
-
-                <!-- <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="education-tab" data-bs-toggle="tab" data-bs-target="#education-tab-pane" type="button" role="tab" aria-controls="education-tab-pane" aria-selected="false">Education</button>
-                </li> --> */}
             </ul>
         </div>
     </div>
@@ -257,47 +242,32 @@ export default function Home() {
                                 </div>
                             </div>
                             {orders.map((order, index) => (
-                            <div class="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0">
-                                <div class="custom-block bg-white shadow-lg">
-                                    {/* <a href="topics-detail.html"> */}
-                                    {/* <Link to={`/events/${event.id}/details`}> */}
-                                    <Link to={`api/orders/${order.id}/`}>
-                                       
-                                    
-                                    <div class="d-flex">
-                                            <div>
-                                            {/* {order.id} */}
-                                                <h5 class="mb-2">{order.event_name}</h5>
+                                <div className="col-lg-4 col-md-6 col-12 mb-4 mb-lg-0" key={index}>
+                                    <div className="custom-block bg-white shadow-lg">
+                                        <Link to={`/api/orders/${order.id}/`}>
+                                            <div className="d-flex">
+                                                <div>
+                                                <h5 className="mb-2">
+                                                {order.event_name.charAt(0).toUpperCase() + order.event_name.slice(1)}
+                                                 </h5>
 
-                                                    <p class="mb-0">{order.event_name} on {order.created_at}</p>
+                                                    <p className="mb-0">
+                                                    {order.event_name && order.event_name.charAt(0).toUpperCase() + order.event_name.slice(1)} on {new Date(order.event_date).toLocaleString()}
+                                                    </p>
+                                                </div>
+                                                <span className="badge bg-design rounded-pill ms-auto">
+                                                    {order.remaining_quantity}
+                                                </span>
                                             </div>
-
-                                            <span class="badge bg-design rounded-pill ms-auto">{order.remaining_quantity}</span>
-                                        </div>
-                                        {/* {event.id} */}
-                                        <img src="./assets/images/topics/undraw_Redesign_feedback_re_jvm0.png" class="custom-block-image img-fluid" alt=""/>
-                                    {/* </a> */}
-                                    </Link>
+                                            <img 
+                                                src="./assets/images/topics/undraw_Redesign_feedback_re_jvm0.png" 
+                                                className="custom-block-image img-fluid" 
+                                                alt={`${order.event_name} image`}
+                                            />
+                                        </Link>
+                                    </div>
                                 </div>
-                            </div>
-                                    ))}
-                            {/* <div class="col-lg-4 col-md-6 col-12">
-                                <div class="custom-block bg-white shadow-lg">
-                                    <a href="topics-detail.html">
-                                        <div class="d-flex">
-                                            <div>
-                                                <h5 class="mb-2">Shopping Voucher</h5>
-
-                                                    <p class="mb-0">Shopping voucher from Walmart expiry 12/12/24.</p>
-                                            </div>
-
-                                            <span class="badge bg-design rounded-pill ms-auto">100</span>
-                                        </div>
-
-                                        <img src="./assets/images/topics/colleagues-working-cozy-office-medium-shot.png" class="custom-block-image img-fluid" alt=""/>
-                                    </a>
-                                </div>
-                            </div> */}
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { ACCESS_TOKEN } from "./constants";
 
 const api = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000", // Ensure protocol is included
+    baseURL: process.env.REACT_APP_API_URL || "http://127.0.0.1:8000" || "http://192.168.40.64:3000"
 });
 
 api.interceptors.request.use(

@@ -6,13 +6,14 @@ export default function Header() {
   return (
 
     <div>
-            <nav class="navbar navbar-expand-lg">
+                <nav class="navbar navbar-expand-lg">
                 <div class="container">
-                    <a class="navbar-brand" href="index.html">
-                        <i class="bi-back"></i>
-                        <span>AnyQRC</span>
+                
+                    <a className="navbar-brand" href="/">
+                    <i class="bi-back"></i>
+                    <span>AnyQRC</span>
                     </a>
-
+                    
                     <div class="d-lg-none ms-auto me-4">
                         <a href="#top" class="navbar-icon bi-person smoothscroll"></a>
                     </div>
@@ -22,6 +23,10 @@ export default function Header() {
                     </button>
     
                     <div class="collapse navbar-collapse" id="navbarNav">
+
+                    
+
+
                         <ul class="navbar-nav ms-lg-5 me-lg-auto">
                             <li class="nav-item">
                                 <a class="nav-link click-scroll" href="#section_1">Home</a>
@@ -40,7 +45,7 @@ export default function Header() {
                             </li> --> */}
     
                             <li class="nav-item">
-                                <a class="nav-link click-scroll" href="#section_5">Contact</a>
+                            <a className="nav-link" href="/event">Create Order</a>
                             </li>
 
                             <li class="nav-item dropdown">
@@ -51,8 +56,8 @@ export default function Header() {
 
                                     {/* <li><a class="dropdown-item" href="login.html">LOGIN</a></li> */}
                                     <li>
-        <Link className="dropdown-item" to="/login">LOGIN</Link>
-      </li>
+                                      <Link className="dropdown-item" to="/login">LOGIN</Link>
+                                    </li>
 
                                     <li><a class="dropdown-item" href="contact.html">LOGOUT</a></li>
 
@@ -71,7 +76,7 @@ export default function Header() {
                         </div>
                     </div>
                 </div>
-            </nav>    
+            </nav>  
     </div>
   );
 }
