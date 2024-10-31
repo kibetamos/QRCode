@@ -13,19 +13,30 @@ export default function Home() {
   const [orders, setOrders] = useState([])
 
   useEffect(() => {
-    getEvents();
+    getOrders();
 }, []);
 
 
-  const getEvents = () => {
+//   const getOrders = () => {
+//     api
+//         .get("/api/orders/")
+//         .then((res) => res.data)
+//         .then((data) => {
+//             setOrders(data);
+//             console.log(data);
+//         })
+//         .catch((err) => alert(err));
+// };
+const getOrders = () => {
     api
         .get("/api/orders/")
         .then((res) => res.data)
         .then((data) => {
-            setOrders(data);
-            console.log(data);
+            const topOrders = data.slice(0, 3); // Get the first 3 orders
+            setOrders(topOrders);
+            console.log(topOrders);
         })
-        .catch((err) => alert(err));
+        .catch((err) => alert("Error fetching orders: " + err.message));
 };
   return (
 
@@ -73,13 +84,19 @@ export default function Home() {
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarLightDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Account</a>
 
                                 <ul class="dropdown-menu dropdown-menu-light" aria-labelledby="navbarLightDropdownMenuLink">
-                                    <li><a class="dropdown-item" href="topics-listing.html">REGISTER</a></li>
+
+                                    <li>
+                                    <Link className="dropdown-item" to="/register">REGISTER</Link>
+                                        
+                                        </li>
 
                                     <li>
                                       <Link className="dropdown-item" to="/login">LOGIN</Link>
                                     </li>
 
-                                    <li><a class="dropdown-item" href="contact.html">LOGOUT</a></li>
+                                    <li>
+                                      <Link className="dropdown-item" to="/logout">LOGout</Link>
+                                    </li>
 
                                 </ul>
                             </li>
@@ -266,9 +283,22 @@ export default function Home() {
                                             />
                                         </Link>
                                     </div>
+
                                 </div>
                             ))}
                         </div>
+
+                        {/* <li>
+                                      <Link className="dropdown-item" to="api/orders">See More Orders</Link>
+                                    </li> */}
+                                    <div className="col-12 text-center mt-5">
+                                        <p className="text-white">
+                                        Want to Attend?
+                                        <Link to={`api/orders`} className="btn custom-btn custom-border-btn ms-3">
+                                            Check out more
+                                        </Link>
+                                    </p>
+                                </div>
                     </div>
                 </div>
 

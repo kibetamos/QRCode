@@ -37,6 +37,15 @@ export default function Form({ route, method }) {
 
     return (
         <div>
+            <header class="site-header d-flex flex-column justify-content-center align-items-center">
+                <div class="container">
+                    <div class="row align-items-center">ls
+                        <div class="col-lg-5 col-12">
+                            <h2 class="text-white">{name}</h2>
+                        </div>
+                    </div>
+                </div>
+            </header>
             {/* <Header /> */}
             <form onSubmit={handleSubmit} class="custom-form contact-form">
             <h1>{name}</h1>

@@ -80,3 +80,10 @@ class QRCodeSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model = Order
 #         fields = ['user', 'event', 'quantity', 'remaining_quantity', 'status']
+
+
+
+class EventSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Event
+        fields = '__all__'  # Or specify the fields you want to include

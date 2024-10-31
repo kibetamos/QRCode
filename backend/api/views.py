@@ -284,20 +284,7 @@ def create_qr_code(request):
         return Response({"error": str(e)}, status=400)
     
 
-##create order
-@api_view(['POST'])
-def create_order(request, event_id):
-    # Assuming authenticated user
-    user = request.user  
-    quantity = request.data.get("quantity")
 
-    order = Order(event_id=event_id, user=user, quantity=quantity)
-    try:
-        order.save()  # Generates QR codes on save
-        serializer = OrderSerializer(order)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    except ValueError as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
 
 
@@ -314,6 +301,78 @@ def verify_qr_code(request, qr_code_data):
     
 
 
+
+
+
+
+
+class EventDetailView(generics.RetrieveAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+
+@api_view(['GET'])
+def views_details(request, id):
+    try:
+        # Fetch the event by ID
+        event = Event.objects.get(id=id)
+    except Event.DoesNotExist:
+        # Return a 404 response if the event does not exist
+        return Response({"detail": "Event not found."}, status=status.HTTP_404_NOT_FOUND)
+
+    # Serialize the event data
+    serializer = EventSerializer(event)
+    # Return the serialized data in the response
+    return Response(serializer.data)
+
+
+
+@api_view(['GET'])
+def about_event(request, id):
+    try:
+        event = Event.objects.get(id=id)  # Fetch the event by ID
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Event.DoesNotExist:
+        return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+
+    ##create order
+@api_view(['POST'])
+def create_order(request, id):
+    try:
+        event = Event.objects.get(id=id)  # Fetch the event by ID
+        serializer = EventSerializer(event)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    except Event.DoesNotExist:
+        return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+    
+
+
+    ##create order
+@api_view(['POST'])
+@api_view(['POST'])
+def create_order(request, event_id):
+    if request.method == 'POST':
+        event = Event.objects.get(id=event_id)  # Get the event based on the event_id
+        user_id = event.organizer  # Set user to the event organizer
+        quantity = request.data.get('quantity')  # Get quantity
+
+        # Create an order instance
+        order = Order(
+            user_id=user_id,  # Use the event organizer as the user
+            event=event,      # Use the event object
+            quantity=quantity, 
+            remaining_quantity=quantity,  # Set remaining quantity initially equal to quantity
+            status='PENDING'  # Set initial status
+        )
+        try:
+            order.save()  # Save the order to the database
+            return Response({"message": "Order created successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
 
 class CreateOrderView(generics.CreateAPIView):
     queryset = Order.objects.all()

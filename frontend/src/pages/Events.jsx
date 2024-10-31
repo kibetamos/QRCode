@@ -4,7 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
 
-const Event = () => {
+const Events = () => {
     const [formData, setFormData] = useState({
         id: "", 
         name: "", 
@@ -196,7 +196,9 @@ const topThreeEvents = events.slice(0, 3);
                         <h3 class="mb-4">Popular Events</h3>
                         <p>You have {events.length} event{events.length !== 1 ? 's' : ''}.</p>
                     </div>
+                    
                     {topThreeEvents.map(event => (
+                        <Link to={`/api/events/${event.id}/`}>
                     <div class="col-lg-8 col-12 mt-3 mx-auto" key={event.id}>
                         <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
                             <div class="d-flex">
@@ -222,8 +224,9 @@ const topThreeEvents = events.slice(0, 3);
                             </div>
                         </div>
                     </div>
-  ))}
-                    
+                     </Link>  
+                        ))}
+                                        
 
                 </div>
             </div>
@@ -311,4 +314,4 @@ const topThreeEvents = events.slice(0, 3);
     );
 };
 
-export default Event;
+export default Events;
