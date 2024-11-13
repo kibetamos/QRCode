@@ -1,24 +1,45 @@
 // src/pages/ScanQRCode.jsx
 import React, { useState } from 'react';
 import { QrReader } from 'react-qr-reader';
+import QRCode from 'qrcode';
 import Header from './Header';
 import Footer from './Footer';
 
 export default function ScanQRCode() {
     const [qrData, setQrData] = useState(null); // To store scanned data
     const [errorMessage, setErrorMessage] = useState(null); // To store error messages
+    const [useCamera, setUseCamera] = useState(true); // Toggle between camera and image upload
 
-    // Handle successful QR code scan
+    // Handle successful QR code scan from camera
     const handleScan = (result) => {
         if (result) {
             setQrData(result.text);
-            setErrorMessage(null); // Clear any previous errors
+            setErrorMessage(null);
         }
     };
 
-    // Handle scanning errors
+    // Handle scanning errors from camera
     const handleError = (err) => {
         setErrorMessage(`Error scanning QR Code: ${err.message}`);
+    };
+
+    // Handle QR code image upload and decode
+    const handleImageUpload = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = async (event) => {
+                const imageData = event.target.result;
+                try {
+                    const decodedData = await QRCode.decode(imageData);
+                    setQrData(decodedData);
+                    setErrorMessage(null);
+                } catch (err) {
+                    setErrorMessage("Error decoding QR code from image.");
+                }
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     return (
@@ -46,17 +67,35 @@ export default function ScanQRCode() {
                         <div className="col-lg-8 col-12 mx-auto">
                             <div className="text-center">
                                 <h3 className="mb-4">QR Code Scanner</h3>
-                                <p>Align the QR code within the frame to scan.</p>
 
-                                {/* QR Code Scanner */}
-                                <QrReader
-                                    constraints={{ facingMode: 'environment' }}
-                                    onResult={(result, error) => {
-                                        if (!!result) handleScan(result);
-                                        if (!!error) handleError(error);
-                                    }}
-                                    style={{ width: '100%' }}
-                                />
+                                {/* Toggle between camera and upload */}
+                                <div className="mb-3">
+                                    <button onClick={() => setUseCamera(true)} className="btn btn-primary me-2">
+                                        Use Camera
+                                    </button>
+                                    <button onClick={() => setUseCamera(false)} className="btn btn-secondary">
+                                        Upload Image
+                                    </button>
+                                </div>
+
+                                {useCamera ? (
+                                    <div>
+                                        <p>Align the QR code within the frame to scan.</p>
+                                        <QrReader
+                                            constraints={{ facingMode: 'environment' }}
+                                            onResult={(result, error) => {
+                                                if (!!result) handleScan(result);
+                                                if (!!error) handleError(error);
+                                            }}
+                                            style={{ width: '100%' }}
+                                        />
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <p>Select a QR code image to upload and scan.</p>
+                                        <input type="file" accept="image/*" onChange={handleImageUpload} />
+                                    </div>
+                                )}
 
                                 {/* Display scanned data */}
                                 {qrData && (
