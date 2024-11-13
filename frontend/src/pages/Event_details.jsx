@@ -38,28 +38,8 @@ export default function EventDetails() {
         fetchOrderDetails();
     }, [id]);
     
-    const handleScan = async () => {
-        if (!qrCode) return; // Ensure there's a QR code to scan
-    
-        try {
-            // Extract the QR code data (ensure this is formatted correctly)
-            const qrCodeData = qrCode.qr_code_data; // This should match the saved format (e.g., 'Organizer-Event-Date')
-    
-            // Construct the URL for the scan API
-            const url = `http://127.0.0.1:8000/api/scan/${encodeURIComponent(qrCodeData)}/`;
-    
-            // Make the POST request to the constructed URL
-            const response = await api.post(url);
-    
-            // Notify user of success or error
-            alert(response.data.message);
-        } catch (err) {
-            // Handle error and notify user
-            alert('Failed to verify QR code. Please try again later.');
-        }
-    };
-    
-  
+
+
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
 

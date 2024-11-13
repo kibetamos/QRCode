@@ -1,4 +1,7 @@
 import json
+from django.views import View
+import stripe
+from django.conf import settings
 import logging
 from django.contrib.auth.models import User
 from rest_framework import generics
@@ -10,6 +13,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth.models import User
 from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.http import JsonResponse, HttpResponse
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -284,10 +291,6 @@ def create_qr_code(request):
         return Response({"error": str(e)}, status=400)
     
 
-
-    
-
-
 @api_view(['POST'])
 def verify_qr_code(request, qr_code_data):
     try:
@@ -299,12 +302,6 @@ def verify_qr_code(request, qr_code_data):
     except QRCode.DoesNotExist:
         return Response({"error": "QR code not found"}, status=status.HTTP_404_NOT_FOUND)
     
-
-
-
-
-
-
 
 class EventDetailView(generics.RetrieveAPIView):
     queryset = Event.objects.all()
@@ -339,41 +336,96 @@ def about_event(request, id):
 
 
     ##create order
-@api_view(['POST'])
-def create_order(request, id):
-    try:
-        event = Event.objects.get(id=id)  # Fetch the event by ID
-        serializer = EventSerializer(event)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    except Event.DoesNotExist:
-        return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
+# @api_view(['POST'])
+# def create_order(request, id):
+#     try:
+#         event = Event.objects.get(id=id)  # Fetch the event by ID
+#         serializer = EventSerializer(event)
+#         return Response(serializer.data, status=status.HTTP_200_OK)
+#     except Event.DoesNotExist:
+#         return Response({'error': 'Event not found'}, status=status.HTTP_404_NOT_FOUND)
     
 
 
-    ##create order
-@api_view(['POST'])
-@api_view(['POST'])
-def create_order(request, event_id):
-    if request.method == 'POST':
-        event = Event.objects.get(id=event_id)  # Get the event based on the event_id
-        user_id = event.organizer  # Set user to the event organizer
-        quantity = request.data.get('quantity')  # Get quantity
+#     ##create order
+# @api_view(['POST'])
+# @api_view(['POST'])
+# def create_order(request, event_id):
+#     if request.method == 'POST':
+#         event = Event.objects.get(id=event_id)  # Get the event based on the event_id
+#         user_id = event.organizer  # Set user to the event organizer
+#         quantity = request.data.get('quantity')  # Get quantity
 
-        # Create an order instance
-        order = Order(
-            user_id=user_id,  # Use the event organizer as the user
-            event=event,      # Use the event object
-            quantity=quantity, 
-            remaining_quantity=quantity,  # Set remaining quantity initially equal to quantity
-            status='PENDING'  # Set initial status
-        )
-        try:
-            order.save()  # Save the order to the database
-            return Response({"message": "Order created successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+#         # Create an order instance
+#         order = Order(
+#             user_id=user_id,  # Use the event organizer as the user
+#             event=event,      # Use the event object
+#             quantity=quantity, 
+#             remaining_quantity=quantity,  # Set remaining quantity initially equal to quantity
+#             status='PENDING'  # Set initial status
+#         )
+#         try:
+#             order.save()  # Save the order to the database
+#             return Response({"message": "Order created successfully!", "order_id": order.id}, status=status.HTTP_201_CREATED)
+#         except Exception as e:
+#             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
     
+
+# class CreateOrderView(generics.CreateAPIView):
+#     queryset = Order.objects.all()
+#     serializer_class = OrderSerializer
 
 class CreateOrderView(generics.CreateAPIView):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Log or print serializer errors
+        print(serializer.errors)  # Temporarily print for debugging
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+    
+
+# def payment_view(request, order_id):
+#     order = Order.objects.get(id=order_id)
+
+#     if request.method == 'POST':
+#         # Simulate payment processing
+#         order.paid_amount = order.total_price()  # Update the paid amount after payment
+#         order.save()
+#         return redirect('order_success', order_id=order.id)
+
+#     return render(request, 'payment.html', {'order': order})
+
+
+
+class CreateCheckoutSessionView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):  # Use `id` here as parameter
+        # try:
+        #     order = Order.objects.get(id=id)  # Fetch the order with `id`
+        # except Order.DoesNotExist:
+        #     return JsonResponse({"error": "Order not found"}, status=404)
+
+        # Proceed with checkout session creation if order is found
+        YOUR_DOMAIN = "http://127.0.0.1:8000"
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',
+                    'unit_amount': int(Order.total_price() * 100),  # Convert to cents
+                    'product_data': {'name': Order.event.name},
+                },
+                'quantity': Order.quantity,
+            }],
+            mode='payment',
+            success_url=YOUR_DOMAIN + '/success/',
+            cancel_url=YOUR_DOMAIN + '/cancel/',
+        )
+
+        return JsonResponse({'id': checkout_session.id})

@@ -25,14 +25,15 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
+        {/* <Route
           path="/"
           element={
             <ProtectedRoute>
               <Home />
             </ProtectedRoute>
           }
-        />
+        /> */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
@@ -40,6 +41,7 @@ function App() {
         <Route path="/api/orders/:id/" element={<Event_details />} />
         {/* <Route path="/api/events/:id/create_order" element={<CreateOrder />} />
          */}
+          {/* <Route path="/orders/create/:id" element={<CreateOrder />} /> */}
          <Route path="/api/events/:id/create_order" element={<CreateOrder />} />
         <Route path="/api/events/:id" element={<About_Event />} />
         {/* <Route path="/event" element={<Event />}  */}

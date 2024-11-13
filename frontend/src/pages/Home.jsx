@@ -95,7 +95,7 @@ const getOrders = () => {
                                     </li>
 
                                     <li>
-                                      <Link className="dropdown-item" to="/logout">LOGout</Link>
+                                      <Link className="dropdown-item" to="/logout">LOGOUT</Link>
                                     </li>
 
                                 </ul>

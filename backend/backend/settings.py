@@ -74,9 +74,9 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost"  ,  
-    "http://134.209.71.190",  
-    "http://localhost:3000",   
+    # "http://localhost"  ,  
+    # "http://134.209.71.190",  
+    "http://localhost:300",   
     "http://127.0.0.1:3000",   
 
 ]
@@ -163,3 +163,8 @@ CORS_ALLOWS_CREDENTIALS = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# settings.py
+STRIPE_PUBLIC_KEY = 'pk_test_51QEyjRB1a6SXKJbzqD4EER3JcpT1WrmdSP1QRzqgMoqtO5h3cIO7cv4xxEKzTXlC5wjUBGi33Fm8azqckXirxtnO008zXRx8R7'
+STRIPE_SECRET_KEY = 'sk_test_51QEyjRB1a6SXKJbzSmuaR1jsADcS0kT9Cpp33m30WOmVEQVHZcbdfC7FMQpEONESgzb8uDtOCi61QZsYPOc5vLGJ00ekaqVyuB'

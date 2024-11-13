@@ -212,9 +212,9 @@ const topThreeEvents = events.slice(0, 3);
                                         <p class="mb-0">{event.description}.</p>
 
                                         <p class="mb-0">{event.date}.</p>
-                                        <Link to={`/events/${event.id}/create-order`}>
+                                        {/* <Link to={`/events/${event.id}/create-order`}>
                                             <button class="btn custom-btn mt-3 mt-lg-4">Create Order</button>
-                                        </Link>
+                                        </Link> */}
 
                                         {/* <a href="topics-detail.html" class="btn custom-btn mt-3 mt-lg-4">Create Order</a> */}
                                     </div>

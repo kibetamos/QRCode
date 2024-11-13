@@ -13,7 +13,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'event', 'user', 'status', 'created_at']
+    list_display = ['id', 'event', 'user', 'status', 'created_at', 'base_price','price']
     search_fields = ['user__username', 'event__name']
     list_filter = ['status', 'created_at']
 

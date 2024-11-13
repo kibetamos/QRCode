@@ -7,7 +7,6 @@ import QRCode from 'qrcode.react';
 import { Link } from 'react-router-dom';
 import { QRCodeCanvas } from 'qrcode.react';
 
-
 export default function CreateOrder() {
     const [event, setEvent] = useState(null); // Store event details
     const { id } = useParams(); // Event ID from URL parameters
@@ -15,8 +14,8 @@ export default function CreateOrder() {
     const [formData, setFormData] = useState({
         user: "", 
         event: "", 
-        quantity: 1, // Default to 1
-        remaining_quantity: 1, 
+        quantity: 1, 
+        price: 1,
         status: "PENDING",
     });
     const [order, setOrder] = useState(null); // Store created order details for QR code
@@ -60,11 +59,11 @@ export default function CreateOrder() {
             })
             .catch((err) => alert("Error creating order: " + err.message));
     };
-
+    
     // Generate QR code data format for the order
     const generateQRData = () => {
-        if (!order) return "";
-        return `orderId=${order.id}|eventId=${order.event}|userId=${order.user}|quantity=${order.quantity}|timestamp=${new Date().toISOString()}`;
+        if (!order || !event) return "";
+        return `Event: ${event.name} | Organizer: ${event.organizer} | Date: ${event.date} | OrderID: ${order.id}`;
     };
 
     return (
@@ -102,6 +101,7 @@ export default function CreateOrder() {
                                                 <h5 className="mb-2">Name: {event.name}</h5>
                                                 <p className="mb-0">Organizer: {event.organizer}</p>
                                                 <p className="mb-0">Date: {event.date}</p>
+                                                <p className="mb-0">Price: {event.price}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -117,19 +117,20 @@ export default function CreateOrder() {
                                                 required
                                             />
                                         </div>
+                                      
                                         <button type="submit" className="btn custom-btn mt-3 mt-lg-4">
-                                            Create Order
+                                            Proceed to payment
                                         </button>
                                     </form>
                                 </div>
 
                                 {/* Display QR Code after order creation */}
-                                {order && (
+                                {/* {order && (
                                     <div className="qr-code-section text-center mt-4">
                                         <h5>Your Order QR Code:</h5>
                                         <QRCodeCanvas value={generateQRData()} size={128} level="H" />
                                     </div>
-                                )}
+                                )} */}
                             </div>
                         ) : (
                             <p>Loading event details...</p>

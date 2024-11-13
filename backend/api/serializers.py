@@ -59,15 +59,20 @@ class OrderSerializer(serializers.ModelSerializer):
     event_name = serializers.CharField(source='event.name', read_only=True)
     event_date = serializers.DateField(source='event.date', read_only=True)
     qr_codes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    total_price = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Order
         fields = '__all__'
         extra_kwargs = {
             'created_at': {'read_only': True},
-            'user': {'read_only': True}
+            'user': {'read_only': True},
+            'paid_amount': {'read_only': True},  # If you want to include this too
         }
 
+    def get_total_price(self, obj):
+        """Calculate and return the total price for the order."""
+        return obj.total_price()
 
 
 class QRCodeSerializer(serializers.ModelSerializer):
