@@ -21,6 +21,7 @@ urlpatterns = [
     path('events/<int:id>/', views.about_event, name='about-event-detail'),
     # path('api/orders/', views.)  
     path('api/orders/', CreateOrderView.as_view(), name='create_order'),
+    path('api/verify_qr_code/', CreateOrderView.as_view(), name='verify_qr_code'),
     path('orders/<int:order_id>/qrcodes/', OrderQRCodeListView.as_view(), name='order_qr_codes'),
 
     # path('api/events/<int:event_id>/', EventDetailView.as_view(), name='event-detail'),

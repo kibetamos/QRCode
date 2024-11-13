@@ -291,18 +291,39 @@ def create_qr_code(request):
         return Response({"error": str(e)}, status=400)
     
 
-@api_view(['POST'])
-def verify_qr_code(request, qr_code_data):
-    try:
-        qr_code = QRCode.objects.get(qr_code_data=qr_code_data)
-        if qr_code.verified:
-            return Response({"message": "QR code already used"}, status=status.HTTP_400_BAD_REQUEST)
-        qr_code.mark_as_used()  # Verifies QR code and updates Order status
-        return Response({"message": "QR code verified"}, status=status.HTTP_200_OK)
-    except QRCode.DoesNotExist:
-        return Response({"error": "QR code not found"}, status=status.HTTP_404_NOT_FOUND)
+# @api_view(['POST'])
+# def verify_qr_code(request, qr_code_data):
+#     try:
+#         qr_code = QRCode.objects.get(qr_code_data=qr_code_data)
+#         if qr_code.verified:
+#             return Response({"message": "QR code already used"}, status=status.HTTP_400_BAD_REQUEST)
+#         qr_code.mark_as_used()  # Verifies QR code and updates Order status
+#         return Response({"message": "QR code verified"}, status=status.HTTP_200_OK)
+#     except QRCode.DoesNotExist:
+#         return Response({"error": "QR code not found"}, status=status.HTTP_404_NOT_FOUND)
     
+@api_view(['POST'])
+def verify_qr_code(request):
+    try:
+        # Get the scanned QR code data from the request
+        scanned_data = request.data.get("qr_code_data")
 
+        # Look up the QR code in the database
+        qr_code = QRCode.objects.filter(data=scanned_data, verified=False).first()
+
+        if qr_code:
+            # If found, mark as verified (optional)
+            qr_code.verified = True
+            qr_code.save()
+
+            return Response({"message": "QR code verified successfully!"}, status=200)
+        else:
+            return Response({"message": "QR code not recognized or already verified."}, status=404)
+
+    except Exception as e:
+        return Response({"error": str(e)}, status=400)
+    
+    
 class EventDetailView(generics.RetrieveAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
@@ -389,7 +410,7 @@ class CreateOrderView(generics.CreateAPIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 
-    
+
 
 # def payment_view(request, order_id):
 #     order = Order.objects.get(id=order_id)
