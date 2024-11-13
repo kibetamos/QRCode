@@ -10,6 +10,9 @@ import Event from "./pages/Events"
 import CreateOrder from "./pages/CreateOrder"
 import About_Event from "./pages/About_Event"
 import Orders from "./pages/Orders"
+import ScanQRCode from './pages/ScanQRCode';
+
+
 function Logout() {
   localStorage.clear()
   return <Navigate to="/login" />
@@ -41,6 +44,7 @@ function App() {
         <Route path="/api/orders/:id/" element={<Event_details />} />
         {/* <Route path="/api/events/:id/create_order" element={<CreateOrder />} />
          */}
+                         <Route path="/scan-qrcode" element={<ScanQRCode />} />
           {/* <Route path="/orders/create/:id" element={<CreateOrder />} /> */}
          <Route path="/api/events/:id/create_order" element={<CreateOrder />} />
         <Route path="/api/events/:id" element={<About_Event />} />
