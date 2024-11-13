@@ -1,11 +1,11 @@
+// OrderForm.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import Header from './Header';
 import Footer from './Footer';
-import QRCode from 'qrcode.react';
 import { Link } from 'react-router-dom';
-import { QRCodeCanvas } from 'qrcode.react';
+
 
 export default function CreateOrder() {
     const [event, setEvent] = useState(null); // Store event details
@@ -14,11 +14,10 @@ export default function CreateOrder() {
     const [formData, setFormData] = useState({
         user: "", 
         event: "", 
-        quantity: 1, 
-        price: 1,
+        quantity: 1, // Default to 1
+        remaining_quantity: 1, 
         status: "PENDING",
     });
-    const [order, setOrder] = useState(null); // Store created order details for QR code
 
     // Fetch event details on component mount
     useEffect(() => {
@@ -54,91 +53,96 @@ export default function CreateOrder() {
         api.post("api/orders/", formData)
             .then((res) => {
                 alert("Order created successfully!");
-                setOrder(res.data); // Store order data for QR code generation
                 navigate('/'); // Redirect after successful creation
             })
             .catch((err) => alert("Error creating order: " + err.message));
-    };
-    
-    // Generate QR code data format for the order
-    const generateQRData = () => {
-        if (!order || !event) return "";
-        return `Event: ${event.name} | Organizer: ${event.organizer} | Date: ${event.date} | OrderID: ${order.id}`;
     };
 
     return (
         <div>
             <Header />
-            <header className="site-header d-flex flex-column justify-content-center align-items-center">
-                <div className="container">
-                    <div className="row align-items-center">
-                        <div className="col-lg-5 col-12">
+            <header class="site-header d-flex flex-column justify-content-center align-items-center">
+                <div class="container">
+                    <div class="row align-items-center">
+
+                        <div class="col-lg-5 col-12">
                             <nav aria-label="breadcrumb">
-                                <ol className="breadcrumb">
-                                    <li className="breadcrumb-item"><Link to="/">Homepage</Link></li>
-                                    <li className="breadcrumb-item active" aria-current="page">Orders</li>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Homepage</a></li>
+
+                                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
                                 </ol>
                             </nav>
-                            <h2 className="text-white">Create Order</h2>
+                            <h2 class="text-white">Create Order</h2>
                         </div>
                     </div>
                 </div>
             </header>
+            {/* <h3></h3> */}
+            <div>
 
-            <section className="section-padding">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-lg-12 col-12 text-center">
-                            <h3 className="mb-4">Create Order</h3>
-                        </div>
+            <section class="section-padding">
+            <div class="container">
+                <div class="row">
 
-                        {event ? (
-                            <div className="col-lg-8 col-12 mt-3 mx-auto" key={event.id}>
-                                <div className="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
-                                    <div className="d-flex">
-                                        <div className="custom-block-topics-listing-info d-flex">
-                                            <div>
-                                                <h5 className="mb-2">Name: {event.name}</h5>
-                                                <p className="mb-0">Organizer: {event.organizer}</p>
-                                                <p className="mb-0">Date: {event.date}</p>
-                                                <p className="mb-0">Price: {event.price}</p>
-                                            </div>
-                                        </div>
+                    <div class="col-lg-12 col-12 text-center">
+                        <h3 class="mb-4">Create Order</h3>
+                        {/* <p>You have {events.length} event{events.length !== 1 ? 's' : ''}.</p> */}
+                    </div>
+                    
+                    {event ? (
+                        // <Link to={/api/events/${event.id}/}>
+                    <div class="col-lg-8 col-12 mt-3 mx-auto" key={event.id}>
+                        <div class="custom-block custom-block-topics-listing bg-white shadow-lg mb-5">
+                            <div class="d-flex">
+                                {/* <img src="./assets/images/topics/undraw_Remote_design_team_re_urdx.png" class="custom-block-image img-fluid" alt=""/> */}
+
+                                <div class="custom-block-topics-listing-info d-flex">
+                                    <div>
+                                        <h5 class="mb-2">Name: {event.name}</h5>
+                                        <p class="mb-0">Organizer: {event.organizer}</p>
+
+                                        <p class="mb-0">Date: {event.date}.</p>
+
+                                        <p class="mb-0">{event.date}.</p>
+                                        
                                     </div>
-                                    <form onSubmit={handleSubmit}>
-                                        <div>
-                                            <label htmlFor="quantity">Quantity:</label>
-                                            <input
-                                                type="number"
-                                                name="quantity"
-                                                value={formData.quantity}
-                                                onChange={handleChange}
-                                                min="1"
-                                                required
-                                            />
-                                        </div>
-                                      
-                                        <button type="submit" className="btn custom-btn mt-3 mt-lg-4">
-                                            Proceed to payment
-                                        </button>
-                                    </form>
+                                    
+
+                                    {/* <span class="badge bg-design rounded-pill ms-auto">14</span> */}
+                                </div>
+                                
+                            </div>
+                            <form onSubmit={handleSubmit}>
+                                <div>
+                                    <label htmlFor="quantity">Quantity:</label>
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value={formData.quantity}
+                                        onChange={handleChange}
+                                        min="1"
+                                        required
+                                    />
                                 </div>
 
-                                {/* Display QR Code after order creation */}
-                                {/* {order && (
-                                    <div className="qr-code-section text-center mt-4">
-                                        <h5>Your Order QR Code:</h5>
-                                        <QRCodeCanvas value={generateQRData()} size={128} level="H" />
-                                    </div>
-                                )} */}
-                            </div>
-                        ) : (
-                            <p>Loading event details...</p>
-                        )}
+                                <button type="submit" className="btn custom-btn mt-3 mt-lg-4">
+                                    Create Order
+                                </button>
+                            </form>
+                        </div>
+                        
                     </div>
-                </div>
-            </section>
+                   
+                ) : (
+                    <p>Loading event details...</p>
+                )}
+                                        
 
+                </div>
+            </div>
+        </section>
+            </div>
             <Footer />
         </div>
     );
